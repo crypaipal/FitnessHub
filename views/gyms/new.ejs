@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New</title>
+</head>
+
+<body>
+    <form action="/gyms" method="POST">
+        <div>
+            <label for="name">Name</label>
+            <input type="text" name="gym[name]" id="name">
+        </div>
+        <div>
+            <label for="location">Location</label>
+            <input type="text" name="gym[location]" id="location">
+        </div>
+        <button>Add Gym</button>
+    </form>
+    <a href="/gyms">All Gyms</a>
+</body>
+
+</html>
