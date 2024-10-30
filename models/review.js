@@ -3,7 +3,7 @@ const { sequelize } = require('../config/database');
 
 const Review = sequelize.define('review', {
     rating: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.REAL,
         allowNull: false,
     },
     comment: {

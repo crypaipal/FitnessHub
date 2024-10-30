@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const { connectDB, sequelize } = require("./config/database");
 const Gym = require("./models/gym");
+const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
 const Cities = require("./models/city");
 
@@ -16,6 +17,7 @@ sequelize.sync()
 
 const app = express();
 
+app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 

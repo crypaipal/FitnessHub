@@ -5,8 +5,7 @@ const { sequelize } = require('../config/database'); // Import połączenia z ba
 const seedCities = async () => {
   try {
     // Synchronizuj model Cities z bazą danych (tworzy tabelę, jeśli jej nie ma)
-    await sequelize.sync({ force: true }); // force: true usunie wszystkie istniejące dane
-
+    await sequelize.sync();
     // Przejdź przez każdy element w citiesData i zapisz do bazy danych
     for (const city of citiesData) {
       await Cities.create({

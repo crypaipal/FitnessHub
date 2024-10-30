@@ -1,26 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit</title>
-</head>
-
-<body>
-    <h1>Edit Gym</h1>
-    <form action="/gyms/<%= gym.id %>?_method=PUT" method="POST">
-        <div>
-            <label for="name">Name</label>
-            <input type="text" name="gym[name]" id="name" value="<%= gym.name %>">
+<% layout("layouts/boilerplate") %>
+    <div class="row">
+        <div class="col-6 offset-3">
+            <h1 class="text-center">Edit Gym</h1>
+            <form action="/gyms/<%= gym.id %>?_method=PUT" method="POST" novalidate class="validated-form">
+                <div class="mb-3">
+                    <label class="form-label" for="name">Name</label>
+                    <input class="form-control" type="text" name="gym[name]" id="name" value="<%= gym.name %>" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a valid name!
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="location">Location</label>
+                    <input class="form-control" type="text" name="gym[location]" id="location"
+                        value="<%= gym.location %>" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a valid city!
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="image">Image Url</label>
+                    <input class="form-control" type="text" name="gym[image]" id="image" value="<%= gym.image %>"
+                        required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a valid url for image!
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="price">Monthly price</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="price-label">$</span>
+                        </div>
+                        <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
+                            aria-describedby="price-label" name="gym[price]" value="<%= gym.price %>" required>
+                    </div>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a valid price!
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea class="form-control" type="text" name="gym[description]" id="description"
+                        required><%= gym.description %></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a valid description!
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <button class="btn btn-info">Update Gym</button>
+                </div>
+            </form>
+            <a href="/gyms">Back to all the Gyms</a>
         </div>
-        <div>
-            <label for="location">Location</label>
-            <input type="text" name="gym[location]" id="location" value="<%= gym.location %>">
-        </div>
-        <button>Update Gym</button>
-    </form>
-    <a href="/gyms">Back to the all Gyms</a>
-</body>
-
-</html>
+    </div>
