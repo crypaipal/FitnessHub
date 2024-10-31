@@ -17,12 +17,12 @@ const Gym = sequelize.define('gym', {
         type: DataTypes.TEXT
     },
     price: {
-        type: DataTypes.REAL,
+        type: DataTypes.DECIMAL,
         defaultValue: 0.00
         // allowNull: false
     },
     rating: {
-        type: DataTypes.REAL,
+        type: DataTypes.DECIMAL,
         // defaultValue: 0
     }
 });
