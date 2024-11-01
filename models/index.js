@@ -2,10 +2,10 @@ const Gym = require('./gym');
 const User = require('./user');
 const Review = require('./review');
 
-Gym.hasMany(Review, { foreignKey: 'gymId' });
-Review.belongsTo(Gym, { foreignKey: 'gymId' });
+Gym.hasMany(Review, { foreignKey: 'gym_id' });
+Review.belongsTo(Gym, { foreignKey: 'gym_id' });
 
-User.hasMany(Review, { foreignKey: 'userId' });
-Review.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(Review, { foreignKey: 'user_id' });
+Review.belongsTo(User, { foreignKey: 'user_id' });
 
 module.exports = { Gym, User, Review };

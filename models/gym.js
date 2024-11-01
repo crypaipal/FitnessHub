@@ -20,10 +20,6 @@ const Gym = sequelize.define('gym', {
         type: DataTypes.DECIMAL,
         defaultValue: 0.00
         // allowNull: false
-    },
-    rating: {
-        type: DataTypes.DECIMAL,
-        // defaultValue: 0
     }
 });
 

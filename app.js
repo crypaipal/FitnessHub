@@ -3,10 +3,11 @@ const path = require("path");
 const { connectDB, sequelize } = require("./config/database");
 const Gym = require("./models/gym");
 const ejsMate = require("ejs-mate");
-const { gymSchema } = require("./schemas.js");
+const { gymSchema, reviewSchema } = require("./schemas.js");
 const catchAsync = require("./utilities/catchAsync");
 const ExpressError = require("./utilities/expressError");
 const methodOverride = require("method-override");
+const Review = require("./models/review");
 
 connectDB();
 sequelize.sync()
@@ -28,6 +29,17 @@ app.use(methodOverride("_method"));
 
 const validateGym = (req, res, next) => {
     const { error } = gymSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(",")
+        throw new ExpressError(msg, 400)
+    }
+    else {
+        next();
+    }
+}
+
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
     if (error) {
         const msg = error.details.map(el => el.message).join(",")
         throw new ExpressError(msg, 400)
@@ -59,8 +71,13 @@ app.post("/gyms", validateGym, catchAsync(async (req, res, next) => {
 app.get("/gyms/:id", catchAsync(async (req, res) => {
     const id = parseInt(req.params.id);
     const gym = await Gym.findByPk(id);
+    const reviews = await Review.findAll({
+        where: { gym_id: id }
+    })
+    gym.dataValues.reviews = reviews; // dodaj reviews jako pole dla gyms
     res.render("gyms/show", { gym });
 }))
+
 
 app.get("/gyms/:id/edit", catchAsync(async (req, res) => {
     const id = parseInt(req.params.id);
@@ -82,9 +99,20 @@ app.delete("/gyms/:id", async (req, res) => {
     res.redirect("/gyms");
 })
 
+app.post("/gyms/:id/reviews", validateReview, catchAsync(async (req, res, next) => {
+    const id = parseInt(req.params.id);
+    const gym = await Gym.findByPk(id);
+    const review = await Review.create({
+        ...req.body.review,
+        gym_id: gym.id
+    });
+    res.redirect(`/gyms/${gym.id}`);
+}));
+
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found", 404));
 })
+
 
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
