@@ -4,10 +4,11 @@ const { sequelize } = require('../config/database');
 const Review = sequelize.define('review', {
     rating: {
         type: DataTypes.DECIMAL,
-        // allowNull: false,
+        allowNull: false
     },
     comment: {
         type: DataTypes.TEXT,
+        allowNull: false
     },
     gym_id: {  // Klucz obcy do modelu Gym
         type: DataTypes.INTEGER,
@@ -15,7 +16,7 @@ const Review = sequelize.define('review', {
             model: 'gyms',  // Nazwa tabeli Gym
             key: 'id'
         },
-        // onDelete: 'CASCADE' // Opcja usunięcia powiązanych recenzji po usunięciu siłowni
+        onDelete: 'CASCADE' // Opcja usunięcia powiązanych recenzji po usunięciu siłowni
     }
 });
 

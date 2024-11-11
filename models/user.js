@@ -3,6 +3,11 @@ const { sequelize } = require('../config/database');
 const bcrypt = require('bcryptjs');
 
 const User = sequelize.define('user', {
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
     username: {
         type: DataTypes.STRING,
         unique: true,
@@ -11,7 +16,7 @@ const User = sequelize.define('user', {
     password: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
+    }
 });
 
 User.beforeCreate(async (user) => {

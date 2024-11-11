@@ -57,6 +57,9 @@
                         </h5>
                         <p class="card-text"> Review: <%= review.comment %>
                         </p>
+                        <form action="/gyms/<%=gym.id%>/reviews/<%=review.id%>?_method=DELETE" method="POST">
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </form>
                     </div>
                 </div>
                 <% } %>

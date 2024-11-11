@@ -1,13 +1,19 @@
 const express = require("express");
 const path = require("path");
 const { connectDB, sequelize } = require("./config/database");
-const Gym = require("./models/gym");
 const ejsMate = require("ejs-mate");
-const { gymSchema, reviewSchema } = require("./schemas.js");
-const catchAsync = require("./utilities/catchAsync");
+const session = require("express-session");
+const flash = require("connect-flash");
 const ExpressError = require("./utilities/expressError");
 const methodOverride = require("method-override");
-const Review = require("./models/review");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const bcrypt = require("bcryptjs");
+const User = require("./models/user");
+
+const userRoutes = require("./routes/users");
+const gymRoutes = require("./routes/gyms");
+const reviewRoutes = require("./routes/reviews");
 
 connectDB();
 sequelize.sync()
@@ -26,93 +32,90 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, "public")));
 
-const validateGym = (req, res, next) => {
-    const { error } = gymSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(",")
-        throw new ExpressError(msg, 400)
+const sessionConfig = {
+    secret: "thisShouldBeABetterSecret!",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
     }
-    else {
-        next();
-    }
-}
+};
+app.use(session(sessionConfig));
+app.use(flash());
 
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(",")
-        throw new ExpressError(msg, 400)
+app.use(passport.initialize());
+app.use(passport.session());
+// Implementacja strategii lokalnej Passport.js
+passport.use(new LocalStrategy(
+    {
+        usernameField: "email",
+    },
+    async (email, password, done) => {
+        try {
+            // Znajdź użytkownika po adresie e-mail
+            const user = await User.findOne({ where: { email } });
+
+            if (!user) {
+                return done(null, false, { message: "Incorrect email" });
+            }
+
+            const isValidPassword = await bcrypt.compare(password, user.password);
+            if (!isValidPassword) {
+                return done(null, false, { message: "Incorrect password" });
+            }
+            // Zwróć użytkownika, jeśli uwierzytelnianie przebiegło pomyślnie
+            return done(null, user);
+        } catch (err) {
+            return done(err);
+        }
     }
-    else {
-        next();
+));
+
+
+// Serializacja użytkownika (zapisywanie użytkownika do sesji)
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+// Deserializacja użytkownika (odczytywanie użytkownika z sesji)
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findByPk(id);
+        done(null, user);
+    } catch (err) {
+        done(err);
     }
-}
+});
+
+app.get("/fakeUser", async (req, res) => {
+    const password = "chicken";
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = User.create({ email: "matvey@gmail.com", username: "cry", password: hashedPassword });
+    res.send(user);
+})
+
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
+})
+
+app.use("/", userRoutes);
+app.use("/gyms", gymRoutes);
+app.use("/gyms/:id/reviews", reviewRoutes);
 
 app.get("/", (req, res) => {
     res.render("home");
 })
 
-app.get("/gyms", catchAsync(async (req, res) => {
-    const gyms = await Gym.findAll({});
-    res.render("gyms/index", { gyms });
-}))
-
-app.get("/gyms/new", (req, res) => {
-    res.render("gyms/new")
-})
-
-app.post("/gyms", validateGym, catchAsync(async (req, res, next) => {
-    // if (!req.body.gym) throw new ExpressError("Invalid Gym Data!", 400);
-    const gym = await Gym.create(req.body.gym);
-    res.redirect(`/gyms/${gym.id}`);
-}))
-
-app.get("/gyms/:id", catchAsync(async (req, res) => {
-    const id = parseInt(req.params.id);
-    const gym = await Gym.findByPk(id);
-    const reviews = await Review.findAll({
-        where: { gym_id: id }
-    })
-    gym.dataValues.reviews = reviews; // dodaj reviews jako pole dla gyms
-    res.render("gyms/show", { gym });
-}))
-
-
-app.get("/gyms/:id/edit", catchAsync(async (req, res) => {
-    const id = parseInt(req.params.id);
-    const gym = await Gym.findByPk(id);
-    res.render("gyms/edit", { gym });
-}))
-
-app.put("/gyms/:id", validateGym, catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const findGym = await Gym.findByPk(id);
-    const gym = await findGym.update({ ...req.body.gym });
-    res.redirect(`/gyms/${gym.id}`);
-}))
-
-app.delete("/gyms/:id", async (req, res) => {
-    const { id } = req.params;
-    const findGym = await Gym.findByPk(id);
-    const gym = await findGym.destroy();
-    res.redirect("/gyms");
-})
-
-app.post("/gyms/:id/reviews", validateReview, catchAsync(async (req, res, next) => {
-    const id = parseInt(req.params.id);
-    const gym = await Gym.findByPk(id);
-    const review = await Review.create({
-        ...req.body.review,
-        gym_id: gym.id
-    });
-    res.redirect(`/gyms/${gym.id}`);
-}));
-
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found", 404));
 })
-
 
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
