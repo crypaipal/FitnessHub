@@ -8,4 +8,7 @@ Review.belongsTo(Gym, { foreignKey: 'gym_id' });
 User.hasMany(Review, { foreignKey: 'user_id' });
 Review.belongsTo(User, { foreignKey: 'user_id' });
 
+Gym.belongsTo(User, { foreignKey: 'author_id' });
+User.hasMany(Gym, { foreignKey: 'author_id' });
+
 module.exports = { Gym, User, Review };

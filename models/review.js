@@ -10,13 +10,22 @@ const Review = sequelize.define('review', {
         type: DataTypes.TEXT,
         allowNull: false
     },
-    gym_id: {  // Klucz obcy do modelu Gym
+    gym_id: {
         type: DataTypes.INTEGER,
         references: {
-            model: 'gyms',  // Nazwa tabeli Gym
+            model: 'gyms',
             key: 'id'
         },
-        onDelete: 'CASCADE' // Opcja usunięcia powiązanych recenzji po usunięciu siłowni
+        onDelete: 'CASCADE'
+    },
+    user_id: { // Dodanie pola klucza obcego
+        type: DataTypes.INTEGER,
+        references: {
+            model: "users", // Odnosi się do tabeli User
+            key: 'id'
+        },
+        allowNull: false,
+        onDelete: 'CASCADE'
     }
 });
 

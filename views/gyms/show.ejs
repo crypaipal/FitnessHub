@@ -16,52 +16,65 @@
                     <li class="list-group-item text-muted">
                         <%= gym.location %>, Poland
                     </li>
+                    <li class="list-group-item">
+                        Submitted by <%= user.username %>
+                    </li>
                     <li class="list-group-item">$<%= gym.price %>/per month</li>
                 </ul>
-                <div class="card-body">
-                    <a href="/gyms/<%= gym.id %>/edit" class="card-link btn btn-info">Edit</a>
-                    <form class="d-inline" action="/gyms/<%=gym.id%>?_method=DELETE" method="POST">
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    3 days ago
-                </div>
+                <% if(currentUser && gym.author_id===currentUser.id) { %>
+                    <div class="card-body">
+                        <a href="/gyms/<%= gym.id %>/edit" class="card-link btn btn-info">Edit</a>
+                        <form class="d-inline" action="/gyms/<%=gym.id%>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                    <% } %>
+                        <div class="card-footer text-muted">
+                            3 days ago
+                        </div>
             </div>
         </div>
         <div class="col-6">
-            <h2>Leave a Review</h2>
-            <form action="/gyms/<%= gym.id %>/reviews" method="POST" class="mb-3 validated-form" novalidate>
-                <div class="mb-3">
-                    <label class="form-label" for="rating">Rating</label>
-                    <input class="form-control-range" type="range" min="1" max="5" name="review[rating]" id="rating">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="comment">Review</label>
-                    <textarea class="form-control" name="review[comment]" id="comment" cols="30" rows="3"
-                        required></textarea>
-                    <div class="valid-feedback">
-                        Looks good!
+            <% if(currentUser) {%>
+                <h2>Leave a Review</h2>
+                <form action="/gyms/<%= gym.id %>/reviews" method="POST" class="mb-3 validated-form" novalidate>
+                    <div class="mb-3">
+                        <label class="form-label" for="rating">Rating</label>
+                        <input class="form-control-range" type="range" min="1" max="5" name="review[rating]"
+                            id="rating">
                     </div>
-                    <div class="invalid-feedback">
-                        Review is required
+                    <div class="mb-3">
+                        <label class="form-label" for="comment">Review</label>
+                        <textarea class="form-control" name="review[comment]" id="comment" cols="30" rows="3"
+                            required></textarea>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            Review is required
+                        </div>
                     </div>
-                </div>
-                <button class="btn btn-success">Submit</button>
-            </form>
-
-            <% for(let review of gym.dataValues.reviews) { %>
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title"> Rating: <%= review.rating %>
-                        </h5>
-                        <p class="card-text"> Review: <%= review.comment %>
-                        </p>
-                        <form action="/gyms/<%=gym.id%>/reviews/<%=review.id%>?_method=DELETE" method="POST">
-                            <button class="btn btn-sm btn-danger">Delete</button>
-                        </form>
-                    </div>
-                </div>
+                    <button class="btn btn-success">Submit</button>
+                </form>
                 <% } %>
+
+                    <% for(let review of reviews) { %>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title"> Rating: <%= review.rating %>
+                                </h5>
+                                <h6 class="card-subtitle mb-2 text-muted">By <%= review.dataValues.author.username %>
+                                </h6>
+                                <p class="card-text"> Review: <%= review.comment %>
+                                </p>
+                                <% if(currentUser && review.author_id===currentUser.id) { %>
+                                    <form action="/gyms/<%=gym.id%>/reviews/<%=review.id%>?_method=DELETE"
+                                        method="POST">
+                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                    <% } %>
+                            </div>
+                        </div>
+                        <% } %>
         </div>
     </div>

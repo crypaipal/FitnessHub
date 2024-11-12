@@ -20,6 +20,15 @@ const Gym = sequelize.define('gym', {
         type: DataTypes.DECIMAL,
         defaultValue: 0.00,
         allowNull: false
+    },
+    author_id: { // Dodanie pola klucza obcego
+        type: DataTypes.INTEGER,
+        references: {
+            model: "users", // Odnosi się do tabeli User
+            key: 'id'
+        },
+        allowNull: false,
+        onDelete: 'CASCADE'
     }
 });
 
