@@ -18,10 +18,10 @@ const Review = sequelize.define('review', {
         },
         onDelete: 'CASCADE'
     },
-    user_id: { // Dodanie pola klucza obcego
+    user_id: {
         type: DataTypes.INTEGER,
         references: {
-            model: "users", // Odnosi się do tabeli User
+            model: "users",
             key: 'id'
         },
         allowNull: false,

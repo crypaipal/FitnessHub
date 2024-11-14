@@ -21,7 +21,7 @@ const Gym = sequelize.define('gym', {
         defaultValue: 0.00,
         allowNull: false
     },
-    author_id: { // Dodanie pola klucza obcego
+    user_id: { // Dodanie pola klucza obcego
         type: DataTypes.INTEGER,
         references: {
             model: "users", // Odnosi się do tabeli User

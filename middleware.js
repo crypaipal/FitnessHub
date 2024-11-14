@@ -34,7 +34,7 @@ module.exports.validateGym = (req, res, next) => {
 module.exports.isAuthor = async (req, res, next) => {
     const { id } = req.params;
     const gym = await Gym.findByPk(id);
-    if (gym.author_id !== req.user.id) {
+    if (gym.user_id !== req.user.id) {
         req.flash("error", "You don't have permission to do that");
         return res.redirect(`/gyms/${id}`);
     }
@@ -44,7 +44,7 @@ module.exports.isAuthor = async (req, res, next) => {
 module.exports.isReviewAuthor = async (req, res, next) => {
     const { id, reviewId } = req.params;
     const review = await Review.findByPk(reviewId);
-    if (review.author_id !== req.user.id) {
+    if (review.user_id !== req.user.id) {
         req.flash("error", "You don't have permission to do that");
         return res.redirect(`/gyms/${id}`);
     }

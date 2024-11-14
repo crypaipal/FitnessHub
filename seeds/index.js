@@ -17,7 +17,7 @@ const seedDB = async () => {
         const price = Math.floor(Math.random() * 50) + 10;
         const randomUser = sample(users);
         const gym = await Gym.create({
-            author_id: randomUser.id,
+            user_id: randomUser.id,
             location: `${citiesData[random1000].name}`,
             name: `${sample(gymNames)}`,
             image: `https://random.imagecdn.app/600/400`,
