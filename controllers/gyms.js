@@ -1,6 +1,7 @@
 const Gym = require("../models/gym");
 const Review = require("../models/review");
 const User = require("../models/user");
+const { cloudinary } = require("../cloudinary");
 
 module.exports.index = async (req, res) => {
     const gyms = await Gym.findAll({});
@@ -15,8 +16,9 @@ module.exports.createGym = async (req, res, next) => {
     // if (!req.body.gym) throw new ExpressError("Invalid Gym Data!", 400);
     const gymData = {
         ...req.body.gym,
-        author_id: req.user.id
+        user_id: req.user.id
     }
+    gymData.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     const gym = await Gym.create(gymData);
     req.flash("success", "Successfully made a new gym!");
     res.redirect(`/gyms/${gym.id}`);
@@ -61,7 +63,17 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateGym = async (req, res) => {
     const { id } = req.params;
     const gym = await Gym.findByPk(id);
-    await gym.update({ ...req.body.gym });
+    const existingImages = gym.images || [];
+    const newImages = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    let updatedImages = [...existingImages, ...newImages];
+    if (req.body.deleteImages) {
+        for (let filename of req.body.deleteImages) {
+            await cloudinary.uploader.destroy(filename);
+        }
+        updatedImages = updatedImages.filter(image => !req.body.deleteImages.includes(image.filename));
+    }
+    await gym.update({ ...req.body.gym, images: updatedImages });
+
     req.flash("success", "Successfully updated the gym!");
     res.redirect(`/gyms/${gym.id}`);
 };

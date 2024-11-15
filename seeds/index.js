@@ -1,4 +1,3 @@
-const Cities = require('../models/city');
 const citiesData = require('./cities');
 const { sequelize } = require('../config/database');
 const { gymNames } = require("./gymHelpers");
@@ -20,7 +19,7 @@ const seedDB = async () => {
             user_id: randomUser.id,
             location: `${citiesData[random1000].name}`,
             name: `${sample(gymNames)}`,
-            image: `https://random.imagecdn.app/600/400`,
+            images: [{ url: `https://random.imagecdn.app/600/400`, filename: `random_image_${i}` }],
             description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sunt itaque, ducimus saepe enim quidem illum nisi officiis totam natus alias labore nobis! Ipsum suscipit molestiae corporis minus dolorum iusto inventore?",
             price: price
         })

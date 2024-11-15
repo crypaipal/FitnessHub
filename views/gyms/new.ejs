@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-6 offset-3">
             <h1 class="text-center">New Gym</h1>
-            <form action="/gyms" method="POST" novalidate class="validated-form">
+            <form action="/gyms" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label" for="name">Name</label>
                     <input class="form-control" type="text" name="gym[name]" id="name" required>
@@ -17,13 +17,14 @@
                         Looks good!
                     </div>
                 </div>
-                <div class="mb-3">
+                <!-- <input type="file" name="image" id="" multiple> -->
+                <!-- <div class="mb-3">
                     <label class="form-label" for="image">Image Url</label>
                     <input class="form-control" type="text" name="gym[image]" id="image" required>
                     <div class="valid-feedback">
                         Looks good!
                     </div>
-                </div>
+                </div> -->
                 <div class="mb-3">
                     <label class="form-label" for="price">Monthly price</label>
                     <div class="input-group mb-3">
@@ -43,6 +44,13 @@
                         required></textarea>
                     <div class="valid-feedback">
                         Looks good!
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="image" id="image" multiple>
+                        <label class="custom-file-label" for="image">Choose
+                            image(-s)...</label>
                     </div>
                 </div>
                 <div class="mb-3">

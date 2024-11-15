@@ -6,9 +6,12 @@ const Gym = sequelize.define('gym', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    image: {
-        type: DataTypes.STRING
+    images:
+    {
+        type: DataTypes.JSON,
+        defaultValue: []
     },
+
     location: {
         type: DataTypes.STRING,
         allowNull: false
@@ -21,14 +24,28 @@ const Gym = sequelize.define('gym', {
         defaultValue: 0.00,
         allowNull: false
     },
-    user_id: { // Dodanie pola klucza obcego
+    user_id: {
         type: DataTypes.INTEGER,
         references: {
-            model: "users", // Odnosi się do tabeli User
+            model: "users",
             key: 'id'
         },
         allowNull: false,
         onDelete: 'CASCADE'
+    }
+}, {
+    getterMethods: {
+        thumbnail() {
+            if (this.images && this.images.length > 0) {
+                return this.images.map(image => {
+                    return {
+                        ...image,
+                        thumbnailUrl: image.url.replace("/upload", "/upload/w_150")
+                    };
+                });
+            }
+            return [];
+        }
     }
 });
 
