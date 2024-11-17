@@ -2,6 +2,8 @@ const Gym = require("../models/gym");
 const Review = require("../models/review");
 const User = require("../models/user");
 const { cloudinary } = require("../cloudinary");
+const maptilerClient = require("@maptiler/client");
+maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 
 module.exports.index = async (req, res) => {
     const gyms = await Gym.findAll({});
@@ -14,10 +16,19 @@ module.exports.renderNewForm = (req, res) => {
 
 module.exports.createGym = async (req, res, next) => {
     // if (!req.body.gym) throw new ExpressError("Invalid Gym Data!", 400);
+    const geoData = await maptilerClient.geocoding.forward(req.body.gym.location, { limit: 1 });
+    if (!geoData || !geoData.features || geoData.features.length === 0) {
+        req.flash("error", "Can't find this place. Please, provide good address.");
+        return res.redirect("/gyms/new");
+    }
     const gymData = {
         ...req.body.gym,
-        user_id: req.user.id
-    }
+        user_id: req.user.id,
+        geometry: {
+            type: "Point",
+            coordinates: geoData.features[0].geometry.coordinates
+        }
+    };
     gymData.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     const gym = await Gym.create(gymData);
     req.flash("success", "Successfully made a new gym!");
@@ -72,7 +83,15 @@ module.exports.updateGym = async (req, res) => {
         }
         updatedImages = updatedImages.filter(image => !req.body.deleteImages.includes(image.filename));
     }
-    await gym.update({ ...req.body.gym, images: updatedImages });
+    const geoData = await maptilerClient.geocoding.forward(req.body.gym.location, { limit: 1 });
+    if (geoData.features && geoData.features.length > 0) {
+        gym.geometry = geoData.features[0].geometry;
+    }
+    else {
+        req.flash("error", "Geolocation not found, update aborted.");
+        return res.redirect(`/gyms/${gym.id}`);
+    }
+    await gym.update({ ...req.body.gym, images: updatedImages, geometry: gym.geometry });
 
     req.flash("success", "Successfully updated the gym!");
     res.redirect(`/gyms/${gym.id}`);

@@ -11,7 +11,10 @@ const Gym = sequelize.define('gym', {
         type: DataTypes.JSON,
         defaultValue: []
     },
-
+    geometry: {
+        type: DataTypes.GEOMETRY('POINT'),
+        allowNull: false
+    },
     location: {
         type: DataTypes.STRING,
         allowNull: false

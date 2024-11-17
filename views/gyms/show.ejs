@@ -3,7 +3,7 @@
 
     <div class="row">
         <div class="col-6">
-
+            <div id="map" style="width: 400px; height: 300px;"></div>
             <div id="gymCarousel" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     <% gym.images.forEach((img, i)=> {%>
@@ -36,7 +36,7 @@
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item text-muted">
-                        <%= gym.location %>, Poland
+                        <%= gym.location %>
                     </li>
                     <li class="list-group-item">
                         Submitted by <%= user.username %>
@@ -120,3 +120,11 @@
                         <% } %>
         </div>
     </div>
+
+    <script>
+        const maptilerApiKey = "<%- process.env.MAPTILER_API_KEY %>";
+        const gym = <%- JSON.stringify(gym) %>
+    </script>
+   
+    <script src="/javascripts/showPageMap.js"></script>
+    

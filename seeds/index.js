@@ -15,14 +15,20 @@ const seedDB = async () => {
         const random1000 = Math.floor(Math.random() * 439);
         const price = Math.floor(Math.random() * 50) + 10;
         const randomUser = sample(users);
+        const selectedCity = citiesData[random1000];
+
         const gym = await Gym.create({
             user_id: randomUser.id,
             location: `${citiesData[random1000].name}`,
             name: `${sample(gymNames)}`,
             images: [{ url: `https://random.imagecdn.app/600/400`, filename: `random_image_${i}` }],
             description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sunt itaque, ducimus saepe enim quidem illum nisi officiis totam natus alias labore nobis! Ipsum suscipit molestiae corporis minus dolorum iusto inventore?",
-            price: price
-        })
+            price: price,
+            geometry: {
+                type: 'Point',
+                coordinates: [selectedCity.longitude, selectedCity.latitude] // Dodaj współrzędne w formacie [longitude, latitude]
+            }
+        });
     }
 }
 
