@@ -11,7 +11,7 @@ const seedDB = async () => {
     await Gym.destroy({ where: {} });
 
     const users = await User.findAll();
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 300; i++) {
         const random1000 = Math.floor(Math.random() * 439);
         const price = Math.floor(Math.random() * 50) + 10;
         const randomUser = sample(users);
@@ -26,7 +26,7 @@ const seedDB = async () => {
             price: price,
             geometry: {
                 type: 'Point',
-                coordinates: [selectedCity.longitude, selectedCity.latitude] // Dodaj współrzędne w formacie [longitude, latitude]
+                coordinates: [selectedCity.longitude, selectedCity.latitude]
             }
         });
     }

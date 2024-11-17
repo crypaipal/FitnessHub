@@ -7,7 +7,15 @@ maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 
 module.exports.index = async (req, res) => {
     const gyms = await Gym.findAll({});
-    res.render("gyms/index", { gyms });
+    const gymsGeoJSON = gyms.map(gym => ({
+        type: 'Feature',
+        geometry: gym.geometry,
+        properties: {
+            popUpMarkup: `<strong><a href="/gyms/${gym.id}">${gym.name}</a></strong>
+            <p>${gym.description ? gym.description.substring(0, 20) + '...' : ''}</p>`
+        }
+    }));
+    res.render("gyms/index", { gyms, gymsGeoJSON: JSON.stringify(gymsGeoJSON) });
 };
 
 module.exports.renderNewForm = (req, res) => {

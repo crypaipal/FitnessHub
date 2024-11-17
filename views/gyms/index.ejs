@@ -1,4 +1,5 @@
 <% layout("layouts/boilerplate") %>
+<div id="map" style="width: 100%; height: 500px;"></div>
     <h1>All Gyms</h1>
     <div>
         <a href="/gyms/new">New Gym</a>
@@ -28,3 +29,12 @@
             </div>
         </div>
         <% } %>
+
+        <script>
+            const maptilerApiKey = "<%- process.env.MAPTILER_API_KEY %>";
+            const gyms = {
+                type: 'FeatureCollection',
+                features: <%- gymsGeoJSON %>
+            }
+        </script>
+        <script src="/javascripts/clusterMap.js"></script>
