@@ -1,26 +1,39 @@
 <% layout("layouts/boilerplate") %>
-    <h1>Register</h1>
-    <form action="/register" class="validated-form" novalidate method="POST">
-        <div class="mb-3">
-            <label class="form-label" for="username">Username</label>
-            <input class="form-control" type="text" name="username" id="username" required>
-            <div class="valid-feedback">
-                Looks good!
+    <div class="container d-flex justify-content-center align-items-center mt-4">
+        <div class="row">
+            <div class="col-md-6 offset-md-3 col-xl-4 offset-xl-4">
+                <div class="card shadow">
+                    <img src="https://plus.unsplash.com/premium_photo-1671631630555-1cb3ffa7dfe6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjl8fGd5bXxlbnwwfHwwfHx8MA%3D%3D"
+                        alt="" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title">Register</h5>
+                        <form action="/register" class="validated-form" novalidate method="POST">
+                            <div class="mb-3">
+                                <label class="form-label" for="username">Username</label>
+                                <input class="form-control" type="text" name="username" id="username" autofocus
+                                    required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="email">Email</label>
+                                <input class="form-control" type="email" name="email" id="email" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="password">Password</label>
+                                <input class="form-control" type="password" name="password" id="password" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                            </div>
+                            <button class="btn btn-success btn-block">Register</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="mb-3">
-            <label class="form-label" for="email">Email</label>
-            <input class="form-control" type="email" name="email" id="email" required>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-        </div>
-        <div class="mb-3">
-            <label class="form-label" for="password">Password</label>
-            <input class="form-control" type="password" name="password" id="password" required>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-        </div>
-        <button class="btn btn-success">Register</button>
-    </form>
+    </div>
