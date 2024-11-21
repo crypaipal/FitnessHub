@@ -64,7 +64,7 @@ map.on('load', function () {
         filter: ['!', ['has', 'point_count']],
         paint: {
             'circle-color': '#11b4da',
-            'circle-radius': 5,
+            'circle-radius': 6,
             'circle-stroke-width': 1,
             'circle-stroke-color': '#fff'
         }
@@ -76,10 +76,12 @@ map.on('load', function () {
             layers: ['clusters']
         });
         const clusterId = features[0].properties.cluster_id;
-        const zoom = await map.getSource('gyms').getClusterExpansionZoom(clusterId);
+        // const zoom = await map.getSource('gyms').getClusterExpansionZoom(clusterId);
+        const currentZoom = map.getZoom(); // Pobierz aktualny poziom zoomu
+        const targetZoom = Math.min(currentZoom + 2, 20);
         map.easeTo({
             center: features[0].geometry.coordinates,
-            zoom
+            zoom: targetZoom
         });
     });
 

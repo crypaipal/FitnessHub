@@ -1,6 +1,7 @@
 const citiesData = require('./cities');
 const { sequelize } = require('../config/database');
 const { gymNames } = require("./gymHelpers");
+const { gymDescriptions } = require("./gymDescriptions");
 const Gym = require('../models/gym');
 const User = require("../models/user");
 
@@ -11,18 +12,20 @@ const seedDB = async () => {
     await Gym.destroy({ where: {} });
 
     const users = await User.findAll();
-    for (let i = 0; i < 300; i++) {
-        const random1000 = Math.floor(Math.random() * 439);
+    for (let i = 0; i < 150; i++) {
+        const random1000 = Math.floor(Math.random() * 380);
         const price = Math.floor(Math.random() * 50) + 10;
         const randomUser = sample(users);
+        const description = sample(gymDescriptions);
         const selectedCity = citiesData[random1000];
 
         const gym = await Gym.create({
             user_id: randomUser.id,
             location: `${citiesData[random1000].name}`,
             name: `${sample(gymNames)}`,
-            images: [{ url: `https://random.imagecdn.app/600/400`, filename: `random_image_${i}` }],
-            description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sunt itaque, ducimus saepe enim quidem illum nisi officiis totam natus alias labore nobis! Ipsum suscipit molestiae corporis minus dolorum iusto inventore?",
+            images: [{ url: `https://images.unsplash.com/photo-1623874514711-0f321325f318?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGd5bXxlbnwwfHwwfHx8MA%3D%3D`,
+             filename: `random_image_${i}` }],
+            description: description,
             price: price,
             geometry: {
                 type: 'Point',

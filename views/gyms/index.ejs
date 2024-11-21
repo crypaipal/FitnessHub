@@ -8,7 +8,7 @@
         <div class="card mb-3">
             <div class="row">
                 <div class="col-md-4">
-                    <img class="img-fluid" src="<%= gym.images[0].url %>" alt="">
+                <img crossorigin="anonymous" class="img-fluid" alt="" src="<%=gym.images[0].url%>">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
@@ -35,6 +35,6 @@
             const gyms = {
                 type: 'FeatureCollection',
                 features: <%- gymsGeoJSON %>
-            }
+            };
         </script>
         <script src="/javascripts/clusterMap.js"></script>

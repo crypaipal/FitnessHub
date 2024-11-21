@@ -3,7 +3,7 @@ const { sequelize } = require('../config/database');
 
 const Cities = sequelize.define('city', {
     name: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
     },
     latitude: {
         type: DataTypes.DECIMAL
