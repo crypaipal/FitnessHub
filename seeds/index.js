@@ -12,8 +12,9 @@ const seedDB = async () => {
     await Gym.destroy({ where: {} });
 
     const users = await User.findAll();
-    for (let i = 0; i < 150; i++) {
-        const random1000 = Math.floor(Math.random() * 380);
+
+    for (let i = 0; i < 200; i++) {
+        const random1000 = Math.floor(Math.random() * 347);
         const price = Math.floor(Math.random() * 50) + 10;
         const randomUser = sample(users);
         const description = sample(gymDescriptions);

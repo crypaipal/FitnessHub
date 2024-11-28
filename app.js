@@ -4,9 +4,10 @@ if (process.env.NODE_ENV !== "production") {
 
 const express = require("express");
 const path = require("path");
+const session = require("express-session");
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const { connectDB, sequelize } = require("./config/database");
 const ejsMate = require("ejs-mate");
-const session = require("express-session");
 const flash = require("connect-flash");
 const ExpressError = require("./utilities/expressError");
 const methodOverride = require("method-override");
@@ -39,14 +40,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
+const secret = process.env.SECRET || "thisshouldbeabettersecret!"
+
 const sessionConfig = {
     name: "session", 
-    secret: "thisShouldBeABetterSecret!",
+    secret,
     resave: false,
     saveUninitialized: true,
+    store: new SequelizeStore({
+        db: sequelize
+    }),
     cookie: {
         httpOnly: true,
-        // secure: true,
+        secure: process.env.NODE_ENV === "production",
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
@@ -178,6 +184,7 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render("error", { err });
 })
 
-app.listen(3000, () => {
-    console.log("Serving on port 3000");
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Serving on port ${port}`);
 })
