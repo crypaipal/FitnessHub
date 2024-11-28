@@ -48,7 +48,8 @@ const sessionConfig = {
     resave: false,
     saveUninitialized: true,
     store: new SequelizeStore({
-        db: sequelize
+        db: sequelize,
+        touchAfter: 24 * 60 * 60
     }),
     cookie: {
         httpOnly: true,

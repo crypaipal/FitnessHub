@@ -10,14 +10,16 @@ module.exports.register = async (req, res, next) => {
         // const hashedPassword = await bcrypt.hash(password, 10);
         const registerUser = await User.create({ email, username, password });
         req.login(registerUser, err => {
-            if (err) return next(err);
+            if (err) { 
+                return next(err);
+            }
             req.flash("success", "Welcome to FitnessHub!");
-            res.redirect("/gyms");
+            return res.redirect("/gyms");
         })
     }
     catch (e) {
         req.flash("error", e.message);
-        res.redirect("register");
+        return res.redirect("register");
     }
 };
 
@@ -31,12 +33,12 @@ module.exports.login = (req, res) => {
     res.redirect(redirectUrl);
 };
 
-module.exports.logout = (req, res) => {
+module.exports.logout = (req, res, next) => {
     req.logout(function (err) {
         if (err) {
             return next(err);
         }
         req.flash("success", "You've successfully logged out");
-        res.redirect("/gyms");
+        return res.redirect("/gyms");
     });
 };
