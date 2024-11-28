@@ -1,7 +1,7 @@
 const User = require("../models/user");
 
 module.exports.renderRegister = (req, res) => {
-    res.render("users/register");
+    return res.render("users/register");
 };
 
 module.exports.register = async (req, res, next) => {
@@ -24,13 +24,13 @@ module.exports.register = async (req, res, next) => {
 };
 
 module.exports.renderLogin = (req, res) => {
-    res.render("users/login");
+    return res.render("users/login");
 };
 
 module.exports.login = (req, res) => {
     req.flash("success", "Welcome back!");
     const redirectUrl = res.locals.returnTo || "/gyms";
-    res.redirect(redirectUrl);
+    return res.redirect(redirectUrl);
 };
 
 module.exports.logout = (req, res, next) => {
