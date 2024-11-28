@@ -46,7 +46,7 @@ const sessionConfig = {
     name: "session", 
     secret: secret,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     store: new SequelizeStore({
         db: sequelize,
         touchAfter: 24 * 60 * 60
@@ -69,7 +69,7 @@ const scriptSrcUrls = [
     "https://kit.fontawesome.com/",
     "https://cdnjs.cloudflare.com/",
     "https://cdn.jsdelivr.net",
-    "https://cdn.maptiler.com/", // add this
+    "https://cdn.maptiler.com/", 
 ];
 const styleSrcUrls = [
     "https://kit-free.fontawesome.com/",
@@ -77,11 +77,11 @@ const styleSrcUrls = [
     "https://fonts.googleapis.com/",
     "https://fontawesome.com/",
     "https://cdn.jsdelivr.net",
-    "https://cdn.maptiler.com/", // add this
+    "https://cdn.maptiler.com/", 
 ];
 const connectSrcUrls = [
     "https://api.maptiler.com/",
-    "https://infragrid.v.network" // add this
+    "https://infragrid.v.network"
 ];
 
 const fontSrcUrls = [];
@@ -153,7 +153,7 @@ app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
-    next();
+    return next();
 })
 
 app.use("/", userRoutes);
@@ -165,7 +165,7 @@ app.get("/", (req, res) => {
 })
 
 app.all("*", (req, res, next) => {
-    next(new ExpressError("Page Not Found", 404));
+    return next(new ExpressError("Page Not Found", 404));
 })
 
 app.use((err, req, res, next) => {
