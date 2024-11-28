@@ -53,11 +53,16 @@ const sessionConfig = {
     }),
     cookie: {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 };
+
+if (app.get('env') === 'production') {
+    app.set('trust proxy', 1) 
+    sessionConfig.cookie.secure = true 
+}
+
 app.use(session(sessionConfig));
 app.use(flash());
 app.use(helmet());
