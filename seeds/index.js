@@ -16,7 +16,12 @@ const seedDB = async () => {
     for (let i = 0; i < 200; i++) {
         const random1000 = Math.floor(Math.random() * 347);
         const price = Math.floor(Math.random() * 50) + 10;
-        const randomUser = sample(users);
+        let randomUser;
+        if(users) {
+            randomUser = sample(users);
+        } else {
+            randomUser = User.create({email: "malpa@gmail.com", username: "Malpa", password: 123});
+        }
         const description = sample(gymDescriptions);
         const selectedCity = citiesData[random1000];
 

@@ -44,7 +44,7 @@ const secret = process.env.SECRET || "thisshouldbeabettersecret!"
 
 const sessionConfig = {
     name: "session", 
-    secret,
+    secret: secret,
     resave: false,
     saveUninitialized: true,
     store: new SequelizeStore({
@@ -97,7 +97,7 @@ app.use(
                 "'self'",
                 "blob:",
                 "data:",
-                `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/`, //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/`,
                 "https://plus.unsplash.com/",
                 "https://images.unsplash.com",
                 "https://api.maptiler.com/",
@@ -110,14 +110,13 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-// Implementacja strategii lokalnej Passport.js
+
 passport.use(new LocalStrategy(
     {
         usernameField: "email",
     },
     async (email, password, done) => {
         try {
-            // Znajdź użytkownika po adresie e-mail
             const user = await User.findOne({ where: { email } });
 
             if (!user) {
@@ -128,7 +127,6 @@ passport.use(new LocalStrategy(
             if (!isValidPassword) {
                 return done(null, false, { message: "Incorrect password" });
             }
-            // Zwróć użytkownika, jeśli uwierzytelnianie przebiegło pomyślnie
             return done(null, user);
         } catch (err) {
             return done(err);
@@ -137,12 +135,10 @@ passport.use(new LocalStrategy(
 ));
 
 
-// Serializacja użytkownika (zapisywanie użytkownika do sesji)
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });
 
-// Deserializacja użytkownika (odczytywanie użytkownika z sesji)
 passport.deserializeUser(async (id, done) => {
     try {
         const user = await User.findByPk(id);
@@ -151,13 +147,6 @@ passport.deserializeUser(async (id, done) => {
         done(err);
     }
 });
-
-app.get("/fakeUser", async (req, res) => {
-    const password = "chicken";
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = User.create({ email: "matvey@gmail.com", username: "cry", password: hashedPassword });
-    res.send(user);
-})
 
 app.use((req, res, next) => {
     res.locals.currentUser = req.user;

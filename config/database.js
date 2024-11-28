@@ -1,7 +1,9 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const dbURL = process.env.DATABASE_URL || "postgres://postgres:2211@localhost:5432/fitnessHub"
+
+const sequelize = new Sequelize(dbURL, {
   dialect: 'postgres',
   logging: false,
 });
