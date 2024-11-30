@@ -9,7 +9,7 @@ const Gym = sequelize.define('gym', {
     images:
     {
         type: DataTypes.JSON,
-        defaultValue: []
+        defaultValue: [],
     },
     geometry: {
         type: DataTypes.GEOMETRY('POINT'),

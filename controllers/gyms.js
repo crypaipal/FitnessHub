@@ -24,6 +24,11 @@ module.exports.renderNewForm = (req, res) => {
 
 module.exports.createGym = async (req, res, next) => {
     // if (!req.body.gym) throw new ExpressError("Invalid Gym Data!", 400);
+    if (!req.files || req.files.length === 0) {
+        req.flash("error", "You must upload at least one image.");
+        return res.redirect("/gyms/new"); 
+    }
+
     const geoData = await maptilerClient.geocoding.forward(req.body.gym.location, { limit: 1 });
     if (!geoData || !geoData.features || geoData.features.length === 0) {
         req.flash("error", "Can't find this place. Please, provide good address.");
@@ -84,13 +89,28 @@ module.exports.updateGym = async (req, res) => {
     const gym = await Gym.findByPk(id);
     const existingImages = gym.images || [];
     const newImages = req.files.map(f => ({ url: f.path, filename: f.filename }));
+
+    // if (existingImages.length === 1 && req.body.deleteImages && req.body.deleteImages.length > 0) {
+    //     req.flash("error", "If the gym has one image, you cannot delete it.");
+    //     return res.redirect(`/gyms/${gym.id}/edit`);
+    // }
+
     let updatedImages = [...existingImages, ...newImages];
+
     if (req.body.deleteImages) {
+        const remainingImages = updatedImages.filter(image => !req.body.deleteImages.includes(image.filename));
+        if (remainingImages.length === 0) {
+            req.flash("error", "You cannot delete the last image.");
+            return res.redirect(`/gyms/${gym.id}/edit`);
+        }
+
         for (let filename of req.body.deleteImages) {
             await cloudinary.uploader.destroy(filename);
         }
-        updatedImages = updatedImages.filter(image => !req.body.deleteImages.includes(image.filename));
+        // updatedImages = updatedImages.filter(image => !req.body.deleteImages.includes(image.filename));
+        updatedImages = remainingImages;
     }
+
     const geoData = await maptilerClient.geocoding.forward(req.body.gym.location, { limit: 1 });
     if (geoData.features && geoData.features.length > 0) {
         gym.geometry = geoData.features[0].geometry;
@@ -99,6 +119,7 @@ module.exports.updateGym = async (req, res) => {
         req.flash("error", "Geolocation not found, update aborted.");
         return res.redirect(`/gyms/${gym.id}`);
     }
+
     await gym.update({ ...req.body.gym, images: updatedImages, geometry: gym.geometry });
 
     req.flash("success", "Successfully updated the gym!");
