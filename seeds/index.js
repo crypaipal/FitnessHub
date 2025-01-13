@@ -14,7 +14,7 @@ const seedDB = async () => {
     const users = await User.findAll();
 
     for (let i = 0; i < 200; i++) {
-        const random1000 = Math.floor(Math.random() * 347);
+        const randomCities = Math.floor(Math.random() * 347);
         const price = Math.floor(Math.random() * 50) + 10;
         let randomUser;
         if(users) {
@@ -27,7 +27,7 @@ const seedDB = async () => {
 
         const gym = await Gym.create({
             user_id: randomUser.id,
-            location: `${citiesData[random1000].name}`,
+            location: `${citiesData[randomCities].name}`,
             name: `${sample(gymNames)}`,
             images: [{ url: `https://images.unsplash.com/photo-1623874514711-0f321325f318?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGd5bXxlbnwwfHwwfHx8MA%3D%3D`,
              filename: `random_image_${i}` }],
