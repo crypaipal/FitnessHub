@@ -20,7 +20,11 @@ const seedDB = async () => {
         if(users) {
             randomUser = sample(users);
         } else {
-            randomUser = User.create({email: "malpa@gmail.com", username: "Malpa", password: 123});
+            User.create({email: "malpa@gmail.com", username: "Malpa", password: 123},
+            {email: "cry@gmail.com", username: "Cry", password: 123},
+            {email: "matvey@gmail.com", username: "Maciej", password: 123});
+            users = await User.findAll();
+            randomUser = sample(users);
         }
         const description = sample(gymDescriptions);
         const selectedCity = citiesData[randomCities];
