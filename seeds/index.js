@@ -17,7 +17,7 @@ const seedDB = async () => {
         const randomCities = Math.floor(Math.random() * 347);
         const price = Math.floor(Math.random() * 50) + 10;
         let randomUser;
-        if(users) {
+        if(users.length > 0) {
             randomUser = sample(users);
         } else {
             User.create({email: "malpa@gmail.com", username: "Malpa", password: 123},
