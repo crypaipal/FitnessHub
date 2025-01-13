@@ -1,3 +1,10 @@
+const citiesData = require('./cities');
+const { sequelize } = require('../config/database');
+const { gymNames } = require("./gymHelpers");
+const { gymDescriptions } = require("./gymDescriptions");
+const Gym = require('../models/gym');
+const User = require("../models/user");
+
 const sample = array => array[Math.floor(Math.random() * array.length)];
 
 const seedDB = async () => {
