@@ -23,7 +23,7 @@ const seedDB = async () => {
             randomUser = User.create({email: "malpa@gmail.com", username: "Malpa", password: 123});
         }
         const description = sample(gymDescriptions);
-        const selectedCity = citiesData[random1000];
+        const selectedCity = citiesData[randomCities];
 
         const gym = await Gym.create({
             user_id: randomUser.id,
