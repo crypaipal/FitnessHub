@@ -14,10 +14,15 @@ const seedDB = async () => {
     let users = await User.findAll();
 
     if (users.length === 0) {
+        const hashedPasswords = await Promise.all([
+            bcrypt.hash("123", 10),
+            bcrypt.hash("123", 10),
+            bcrypt.hash("123", 10),
+        ]);
         await User.bulkCreate([
-            { email: "malpa@gmail.com", username: "Malpa", password: "123" },
-            { email: "cry@gmail.com", username: "Cry", password: "123" },
-            { email: "matvey@gmail.com", username: "Maciej", password: "123" },
+            { email: "malpa@gmail.com", username: "Malpa", password: hashedPasswords[0] },
+            { email: "cry@gmail.com", username: "Cry", password: hashedPasswords[1] },
+            { email: "matvey@gmail.com", username: "Maciej", password: hashedPasswords[2] },
         ]);
         users = await User.findAll();
     }
