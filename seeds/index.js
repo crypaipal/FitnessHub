@@ -4,7 +4,7 @@ const { gymNames } = require("./gymHelpers");
 const { gymDescriptions } = require("./gymDescriptions");
 const Gym = require('../models/gym');
 const User = require("../models/user");
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 const passport = require('passport');
 
 const sample = array => array[Math.floor(Math.random() * array.length)];
@@ -26,7 +26,7 @@ const seedDB = async () => {
             randomUser = User.create({email: "malpa@gmail.com", username: "Malpa", password: password});
         }
         const description = sample(gymDescriptions);
-        const selectedCity = citiesData[random1000];
+        const selectedCity = citiesData[randomCities];
 
         const gym = await Gym.create({
             user_id: randomUser.id,
