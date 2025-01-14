@@ -4,7 +4,7 @@ const { gymNames } = require("./gymHelpers");
 const { gymDescriptions } = require("./gymDescriptions");
 const Gym = require('../models/gym');
 const User = require("../models/user");
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const passport = require('passport');
 
 const sample = array => array[Math.floor(Math.random() * array.length)];
