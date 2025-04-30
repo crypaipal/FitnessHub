@@ -11,7 +11,7 @@ module.exports = {
     logging: false,
   },
   production: {
-    url: "postgresql://fitnesshub:857b41weq9kONfewj5bnum71TuBkygOW@dpg-cvhkhkdrie7s73e7klsg-a/db_fitnesshub",
+    url: "postgresql://fitness_hub_5o4l_user:HO45OfLxytGSghsNQTrBuIfK3BVL3khk@dpg-d08t0l95pdvs739s01n0-a.frankfurt-postgres.render.com/fitness_hub_5o4l",
     dialect: 'postgres',
     dialectOptions: {
       ssl: {
